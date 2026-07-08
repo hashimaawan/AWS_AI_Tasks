@@ -1,0 +1,17 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "EmptySourceBucket",
+			"Effect": "Allow",
+			"Action": [
+				"s3:ListBucket",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::hashim-images-source-481719141347-eu-north-1-an",
+				"arn:aws:s3:::hashim-images-source-481719141347-eu-north-1-an/*"
+			]
+		}
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "ReadSourceBucket",
+			"Effect": "Allow",
+			"Action": [
+				"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::img-upload-bucket-ia/*"
+			]
+		},
+		{
+			"Sid": "WriteDestinationBucket",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::img-resize-bucket-ia/*"
+			]
+		}
+	]
+}
