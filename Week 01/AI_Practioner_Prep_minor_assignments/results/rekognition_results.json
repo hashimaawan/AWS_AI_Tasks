@@ -1,0 +1,62 @@
+{
+  "dog.jpg": [
+    {
+      "label": "Animal",
+      "confidence": 100.0
+    },
+    {
+      "label": "Canine",
+      "confidence": 100.0
+    },
+    {
+      "label": "Dog",
+      "confidence": 100.0
+    },
+    {
+      "label": "Golden Retriever",
+      "confidence": 100.0
+    },
+    {
+      "label": "Mammal",
+      "confidence": 100.0
+    },
+    {
+      "label": "Pet",
+      "confidence": 100.0
+    },
+    {
+      "label": "Puppy",
+      "confidence": 86.06
+    }
+  ],
+  "road.jpg": [
+    {
+      "label": "City",
+      "confidence": 100.0
+    },
+    {
+      "label": "Urban",
+      "confidence": 99.95
+    },
+    {
+      "label": "Architecture",
+      "confidence": 99.93
+    },
+    {
+      "label": "Building",
+      "confidence": 99.93
+    },
+    {
+      "label": "Cityscape",
+      "confidence": 99.93
+    },
+    {
+      "label": "Road",
+      "confidence": 99.71
+    },
+    {
+      "label": "Building Complex",
+      "confidence": 99.54
+    }
+  ]
+}
