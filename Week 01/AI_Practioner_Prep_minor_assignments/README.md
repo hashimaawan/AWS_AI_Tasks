@@ -104,7 +104,7 @@ Creates a Comprehend client and sends each tweet to `detect_sentiment`. Comprehe
 
 Things to know: "Mixed" covers text with both positive and negative parts; `SentimentScore` holds the probability per category and the highest becomes the result; and unlike Rekognition, Comprehend needs no S3 — the text is passed directly.
 
-## Task 3 — SageMaker Studio navigation (look, don't run)
+## Task 3 — SageMaker Studio navigation 
 
 Explored SageMaker Studio's UI without launching any compute.
 
@@ -151,7 +151,6 @@ Scoping to these exact actions rather than `AdministratorAccess`/wildcards appli
 ## Key learnings
 
 - **Same API, three interfaces** — CLI, SDK-in-CloudShell, and SDK-local all call the identical Rekognition/Comprehend API; the CLI is best for quick one-off calls, the SDK for logic (loops, saving output, error handling).
-- **SSO over static keys** — running locally, IAM Identity Center (`aws configure sso`) provides auto-refreshing credentials, so no long-lived keys are stored or risk being committed.
 - **Regional availability matters** — Rekognition/Comprehend aren't in every region; Stockholm lacks both, so the work moved to Ireland (eu-west-1). For Rekognition's `S3Object`, the bucket must match the API region.
 - **S3 dependency differs by service** — Rekognition reads the image from S3 (needs `s3:GetObject`); Comprehend takes text directly (needs no S3). This determines the IAM permissions each service requires.
 
