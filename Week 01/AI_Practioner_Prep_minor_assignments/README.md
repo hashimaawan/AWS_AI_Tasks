@@ -104,16 +104,18 @@ Creates a Comprehend client and sends each tweet to `detect_sentiment`. Comprehe
 
 Things to know: "Mixed" covers text with both positive and negative parts; `SentimentScore` holds the probability per category and the highest becomes the result; and unlike Rekognition, Comprehend needs no S3 — the text is passed directly.
 
-## Task 3 — SageMaker Studio navigation 
+## Task 3 — SageMaker Studio navigation
 
-Explored SageMaker Studio's UI without launching any compute.
+SageMaker is the *build-your-own-ML* platform (unlike Rekognition/Comprehend, which are ready-made APIs). For this task the Studio UI was explored to understand where each stage of the ML lifecycle lives — **no compute was launched**. What each section is for:
 
-- **Notebooks / JupyterLab** — where you write and run ML code.
-- **Experiments** — where training runs are tracked and compared.
-- **Models** — the model registry; where trained models are versioned and deployed as endpoints.
-- **Flow:** prepare data → train (job) → track (experiments) → register (models) → deploy (endpoint).
+- **JupyterLab / Notebooks** — the coding workspace; this is where you would *create a new notebook* to write and run ML training/exploration code. (Explored only — no space or notebook launched.)
+- **Experiments** — where each training run is logged and compared, so you can track metrics and parameters across multiple runs.
+- **Models** — the model registry; where trained models are versioned, and the place you would *deploy a model* to an endpoint for inference.
+- **Jobs / Training** — where running and past training/processing jobs appear.
 
-> **Cost note:** navigation is free, but launching a JupyterLab space, app, or notebook starts a billable instance. This task was navigation only — no compute launched.
+**The ML workflow these map to:** prepare data → train (a training job) → track results (Experiments) → register the model (Models) → deploy to an endpoint. In short: you'd *create a notebook* in the JupyterLab section, and *deploy a model* from the Models registry.
+
+> **Cost note:** opening Studio and navigating is free, but launching a JupyterLab space, app, or notebook starts a billable instance that bills per hour. This task was navigation only — the running-instances view was checked to confirm nothing was running.
 
 ## Least-privilege / IAM note
 
@@ -145,21 +147,19 @@ Scoping to these exact actions rather than `AdministratorAccess`/wildcards appli
 | SDK — Comprehend sentiment output | ![comprehend sdk](./screenshots/04-comprehend-sdk.png) |
 | CLI — `aws rekognition detect-labels` output | ![rekognition cli](./screenshots/05-rekognition-cli.png) |
 | CLI — `aws comprehend detect-sentiment` output | ![comprehend cli](./screenshots/06-comprehend-cli.png) |
-| CLI — `aws sts get-caller-identity` (SSO auth working) | ![sso auth](./screenshots/07-sso-auth.png) |
-| SageMaker Studio — Notebooks / Experiments / Models | ![sagemaker studio](./screenshots/08-sagemaker-studio.png) |
+| SageMaker Studio — landing / domain | ![sagemaker studio](./screenshots/08-sagemaker-studio.png) |
+| SageMaker — Experiments section | ![sagemaker experiments](./screenshots/10-sagemaker-experiments.png) |
+| SageMaker — Models section | ![sagemaker models](./screenshots/11-sagemaker-models.png) |
 
 ## Key learnings
 
 - **Same API, three interfaces** — CLI, SDK-in-CloudShell, and SDK-local all call the identical Rekognition/Comprehend API; the CLI is best for quick one-off calls, the SDK for logic (loops, saving output, error handling).
+- **One image per call — SDK loops, CLI repeats** — Rekognition's `detect_labels` analyses exactly one image per call (an API limit, not a choice). To process several images you must call it once per image. In the SDK, the script's `for` loop does this automatically and aggregates all results into one JSON; in the CLI you either repeat the command or write a shell loop. This is the clearest example of why the SDK is better for processing multiple items while the CLI suits single calls.
 - **Regional availability matters** — Rekognition/Comprehend aren't in every region; Stockholm lacks both, so the work moved to Ireland (eu-west-1). For Rekognition's `S3Object`, the bucket must match the API region.
 - **S3 dependency differs by service** — Rekognition reads the image from S3 (needs `s3:GetObject`); Comprehend takes text directly (needs no S3). This determines the IAM permissions each service requires.
+- **Managed AI vs SageMaker** — Rekognition and Comprehend are pre-trained, call-an-API services; SageMaker Studio is the workspace for building, training, tracking, and deploying your own models (notebooks → experiments → models → endpoint).
 
-## Deliverables
 
-- `rekognition_task.py` + `rekognition_results.json`
-- `comprehend_task.py` + sentiment output
-- CLI command outputs (Rekognition + Comprehend)
-- SageMaker Studio navigation screenshots (no compute launched)
 
 ## Notes
 
