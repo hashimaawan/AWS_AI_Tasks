@@ -86,6 +86,7 @@ Notes on *why* each choice was made, not just what was configured:
 |---|---|
 | S3 buckets (source + resized) | ![buckets](./screenshots/01-buckets.png) |
 | Resize Lambda + layer attached | ![resize function](./screenshots/02-resize-function.png) |
+| layer attached | ![resize function](./screenshots/lambda_layer.png) |
 | Resized output in destination bucket | ![resized output](./screenshots/03-resized-output.png) |
 | Least-privilege IAM policy (resize) | ![iam policy](./screenshots/04-iam-policy.png) |
 | CloudWatch log of a successful run | ![cloudwatch](./screenshots/05-cloudwatch-log.png) |
