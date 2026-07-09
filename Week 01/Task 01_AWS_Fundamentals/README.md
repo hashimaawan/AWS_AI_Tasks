@@ -1,4 +1,4 @@
-# AWS Serverless Image-Resize Pipeline
+# Week 01 Task 01 - AWS Serverless Image-Resize Pipeline
 
 An event-driven pipeline built on AWS as part of Week 1 of the AI internship (AWS Fundamentals). An image uploaded to an S3 bucket automatically triggers a Lambda function that resizes it and stores the result in a second bucket. A separate scheduled Lambda empties the source bucket, following least-privilege IAM throughout.
 
