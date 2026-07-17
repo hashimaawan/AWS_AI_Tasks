@@ -44,7 +44,7 @@ Timed mock exams taken this week, with scores tracked to measure readiness again
 
 | # | Practice Exam | Score | Result |
 |---|---------------|-------|--------|
-| 0 | _Udemy practice exam_ | _69_ | _Fail_ |
+| 0 | _Udemy practice exam_ | _69_ | _Fail_ 😞 |
 | 1 | _TimeMode Set 1 Dojo_ | _81.48_ | _pass_ |
 | 2 | _TimeMode Set 2 Dojo_ | _89.2_ | _pass_ |
 | 3 | _TimeMode Set 3 Dojo_ | _83.61_ | _pass_ |
