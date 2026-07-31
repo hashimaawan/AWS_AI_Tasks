@@ -1,0 +1,61 @@
+transaction_id,transaction_date,province,district,crop_type,quantity_kg,price_per_kg_pkr,transport_mode,pooled_load,buyer_rating
+TXN0006,2025-01-03,Khyber Pakhtunkhwa,Charsadda,maize,300,47.52,tractor_trolley,false,3.6
+TXN0014,2025-01-03,Sindh,Sukkur,apple,100,109.74,pooled_van,true,4.5
+TXN0016,2025-01-04,Sindh,Sukkur,potato,50,68.99,tractor_trolley,false,4.8
+TXN0002,2025-01-07,Sindh,Larkana,maize,50,40.63,pooled_van,true,3.5
+TXN0007,2025-01-08,Sindh,Larkana,apple,75,141.96,pooled_van,true,4.5
+TXN0004,2025-01-09,Punjab,Multan,tomato,250,100.38,pickup,false,3.4
+TXN0010,2025-01-09,Khyber Pakhtunkhwa,Nowshera,onion,300,48.99,tractor_trolley,false,4.4
+TXN0013,2025-01-09,Punjab,Faisalabad,onion,500,80.97,tractor_trolley,false,4.2
+TXN0018,2025-01-10,Punjab,Bahawalpur,tomato,75,88.0,tractor_trolley,false,4.0
+TXN0011,2025-01-13,Khyber Pakhtunkhwa,Swat,wheat,50,31.21,mini_truck,false,3.1
+TXN0012,2025-01-13,Sindh,Larkana,apple,400,109.14,tractor_trolley,false,3.9
+TXN0003,2025-01-14,Sindh,Hyderabad,onion,500,79.38,pickup,false,3.9
+TXN0015,2025-01-20,Khyber Pakhtunkhwa,Mardan,tomato,300,106.49,pickup,false,3.8
+TXN0008,2025-01-21,Khyber Pakhtunkhwa,Mardan,maize,400,36.84,mini_truck,false,3.3
+TXN0009,2025-01-21,Punjab,Faisalabad,potato,1000,59.56,pickup,false,4.2
+TXN0001,2025-01-24,Sindh,Hyderabad,wheat,150,38.38,pooled_van,true,3.2
+TXN0017,2025-01-24,Punjab,Sahiwal,maize,100,35.28,pooled_van,true,4.8
+TXN0019,2025-01-25,Khyber Pakhtunkhwa,Mardan,apple,500,158.63,tractor_trolley,false,4.8
+TXN0020,2025-01-27,Sindh,Sukkur,sugarcane,250,12.19,mini_truck,false,3.5
+TXN0005,2025-01-28,Punjab,Multan,maize,250,36.84,mini_truck,false,4.2
+TXN0024,2025-02-01,Punjab,Bahawalpur,sugarcane,150,13.21,pooled_van,true,4.2
+TXN0025,2025-02-02,Khyber Pakhtunkhwa,Nowshera,onion,1000,40.4,pickup,false,3.1
+TXN0032,2025-02-02,Khyber Pakhtunkhwa,Mardan,orange,150,84.28,pickup,false,3.8
+TXN0040,2025-02-03,Khyber Pakhtunkhwa,Peshawar,onion,100,67.82,pickup,false,3.7
+TXN0022,2025-02-06,Sindh,Hyderabad,tomato,500,97.88,mini_truck,false,4.1
+TXN0030,2025-02-08,Khyber Pakhtunkhwa,Nowshera,sugarcane,100,13.4,pooled_van,true,4.7
+TXN0036,2025-02-08,Sindh,Hyderabad,tomato,75,59.45,mini_truck,false,3.2
+TXN0038,2025-02-08,Punjab,Sahiwal,onion,250,76.83,mini_truck,false,3.8
+TXN0023,2025-02-13,Sindh,Sukkur,onion,150,91.09,tractor_trolley,false,4.3
+TXN0039,2025-02-20,Sindh,Larkana,potato,75,51.0,pooled_van,true,5.0
+TXN0026,2025-02-22,Khyber Pakhtunkhwa,Swat,maize,200,39.25,mini_truck,false,3.4
+TXN0033,2025-02-22,Punjab,Sahiwal,sugarcane,500,14.85,tractor_trolley,false,4.0
+TXN0037,2025-02-22,Sindh,Hyderabad,wheat,300,36.67,tractor_trolley,false,4.1
+TXN0034,2025-02-24,Khyber Pakhtunkhwa,Swat,onion,750,93.28,tractor_trolley,false,3.1
+TXN0027,2025-02-26,Khyber Pakhtunkhwa,Nowshera,sugarcane,400,14.43,mini_truck,false,3.4
+TXN0029,2025-02-26,Sindh,Larkana,maize,250,31.09,pickup,false,3.5
+TXN0021,2025-02-27,Khyber Pakhtunkhwa,Nowshera,maize,400,31.54,pickup,false,5.0
+TXN0031,2025-02-27,Khyber Pakhtunkhwa,Charsadda,maize,500,30.91,pickup,false,4.9
+TXN0028,2025-02-28,Khyber Pakhtunkhwa,Charsadda,apple,400,128.12,tractor_trolley,false,3.1
+TXN0035,2025-02-28,Punjab,Multan,wheat,500,36.18,tractor_trolley,false,3.3
+TXN0047,2025-03-02,Sindh,Hyderabad,apple,100,142.43,pooled_van,true,3.6
+TXN0051,2025-03-02,Khyber Pakhtunkhwa,Swat,tomato,75,106.18,pooled_van,true,4.7
+TXN0042,2025-03-04,Sindh,Sukkur,maize,100,46.9,pooled_van,true,4.5
+TXN0048,2025-03-04,Khyber Pakhtunkhwa,Swat,onion,1000,77.51,mini_truck,false,4.6
+TXN0043,2025-03-07,Khyber Pakhtunkhwa,Swat,potato,250,56.17,tractor_trolley,false,4.3
+TXN0060,2025-03-07,Sindh,Larkana,potato,50,49.21,pooled_van,true,3.9
+TXN0045,2025-03-09,Khyber Pakhtunkhwa,Peshawar,apple,1000,159.4,pickup,false,4.5
+TXN0054,2025-03-09,Sindh,Larkana,apple,75,174.53,pickup,false,4.2
+TXN0057,2025-03-11,Sindh,Larkana,onion,75,60.03,tractor_trolley,false,3.6
+TXN0053,2025-03-12,Punjab,Sahiwal,maize,200,47.4,tractor_trolley,false,4.0
+TXN0058,2025-03-13,Khyber Pakhtunkhwa,Swat,potato,250,58.34,tractor_trolley,false,3.6
+TXN0044,2025-03-14,Punjab,Bahawalpur,sugarcane,50,14.51,pooled_van,true,4.7
+TXN0041,2025-03-17,Khyber Pakhtunkhwa,Charsadda,potato,1000,56.41,pickup,false,4.3
+TXN0052,2025-03-22,Khyber Pakhtunkhwa,Mardan,sugarcane,150,15.5,pooled_van,true,3.4
+TXN0059,2025-03-22,Khyber Pakhtunkhwa,Mardan,orange,300,93.25,tractor_trolley,false,4.8
+TXN0046,2025-03-23,Sindh,Larkana,orange,75,88.05,pooled_van,true,4.8
+TXN0056,2025-03-23,Sindh,Hyderabad,orange,150,104.98,pooled_van,true,3.9
+TXN0055,2025-03-24,Punjab,Multan,maize,250,40.74,mini_truck,false,3.9
+TXN0049,2025-03-26,Punjab,Bahawalpur,tomato,150,115.17,pickup,false,4.8
+TXN0050,2025-03-26,Khyber Pakhtunkhwa,Mardan,apple,300,160.41,tractor_trolley,false,4.7
