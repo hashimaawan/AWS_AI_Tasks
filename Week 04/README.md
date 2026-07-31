@@ -8,10 +8,10 @@ example.
 
 - **Task 1 — Catalog raw data with a Glue crawler.** Register a raw CSV sitting
   in S3 into the Glue Data Catalog so it becomes queryable with SQL. **Status:
-  ✅ done.**
+   done.**
 - **Task 2 — Transform CloudWatch logs with a Glue ETL job, query by date in
   Athena.** Parse logs for `ERROR`/`INFO` tags, write the processed output back
-  to S3, and query it by date. **Status: ✅ done.**
+  to S3, and query it by date. **Status:  done.**
 
 Everything runs in **`eu-north-1` (Stockholm)**, our shared sandbox. Glue,
 the Data Catalog, and Athena are all available in this region, so — unlike
@@ -26,7 +26,7 @@ needed** for this week.
 
 # Task 1 — Cataloging the dataset with a Glue crawler
 
-**Status: ✅ complete.**
+**Status:  complete.**
 
 ## What the task asked for
 
@@ -207,7 +207,7 @@ the job, not an afterthought.
 
 # Task 2 — Transforming CloudWatch logs with a Glue ETL job, queried by date in Athena
 
-**Status: ✅ complete.**
+**Status:  complete.**
 
 ## What the task asked for
 
