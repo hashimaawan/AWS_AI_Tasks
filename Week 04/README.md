@@ -207,7 +207,7 @@ the job, not an afterthought.
 
 # Task 2 — Transforming CloudWatch logs with a Glue ETL job, queried by date in Athena
 
-**Status:  complete.**
+**Status: +++++++++++++++++++++++++++++++++++ complete.**
 
 ## What the task asked for
 

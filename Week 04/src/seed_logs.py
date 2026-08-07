@@ -7,6 +7,12 @@ real to retrieve and the Athena "query by date" step is meaningful.
 
 Why CloudShell: it already has boto3 installed and your credentials, so
 there is nothing to set up. Just paste and run.
+
+NOTE: one INFO template deliberately contains the word "ERROR" in its body
+("INFO Retrying after previous ERROR ...") to exercise the tricky case where a
+message holds BOTH keywords. The job classifies by PARSING the level at the
+front of the line, so this is correctly tagged INFO -- proving the classifier
+is not fooled by a keyword in the body.
 """
 import boto3, random
 from datetime import datetime, timezone, timedelta
@@ -28,6 +34,7 @@ INFO_MSGS = [
     "INFO Transport matched for {tx} via pooled_van",
     "INFO Payment escrow held for {tx}",
     "INFO Delivery confirmed for {tx}",
+    "INFO Retrying after previous ERROR for {tx}",   # <-- body contains "ERROR"
 ]
 ERROR_MSGS = [
     "ERROR Payment gateway timeout for {tx}",
