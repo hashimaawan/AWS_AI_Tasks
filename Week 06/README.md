@@ -127,7 +127,6 @@ Pipeline order is deliberate: **load -> inspect -> explore -> decide -> clean ->
 
 > **Is 0.998 leakage?** No. The dataset is genuinely separable (`Tenure`: churners ~3 mo vs stayers ~11; `Complain`: 31.7% vs 10.9% churn). Leakage would show a train/test gap; instead validation (0.991) and test (0.998) agree — the fingerprint of a truly separable problem. Guards: split before transform, pipeline fit on train only, test set used exactly once.
 
-> **[INSERT IMAGE: HPO leaderboard screenshot + confusion matrix]**
 
 ---
 
