@@ -1,0 +1,133 @@
+[
+  {
+    "id": "q1_idle_ec2",
+    "question": "What CPU utilization threshold defines an idle EC2 instance in the cleanup policy?",
+    "answerable": true,
+    "expected_source": "09_idle_resource_cleanup_runbook",
+    "direct_answer": "I don't have specific information about a particular cleanup policy's CPU utilization threshold for defining idle EC2 instances. This can vary depending on:\n\n1. **Which cleanup policy you're referring to** - AWS has different tools and policies (AWS Compute Optimizer, third-party tools, custom policies, etc.)\n2. **Your organization's specific configuration** - Many companies define their own thresholds\n\nCommon thresholds I'm aware of in general cloud optimization contexts include:\n- **Less than 5-10% CPU utilization** over a period (often 7-14 days) is frequently used to identify idle instances\n- Some tools use **less than 1-2%** for very strict definitions\n\n**To find the specific threshold you need:**\n- Check your organization's cleanup policy documentation\n- Review AWS Compute Optimizer settings if you're using that service\n- Look at any third-party tool documentation you're using\n- Check your infrastructure-as-code or policy configuration files\n\nCould you provide more context about which specific cleanup policy or tool you're asking about? That would help me give you a more accurate answer.",
+    "direct_verdict": "REFUSED",
+    "direct_latency_ms": 5000.2,
+    "rag_answer": "An EC2 instance is classified as idle when it has average CPU utilization below 3% and network I/O below 5 MB/day, measured over a continuous 14-day observation window.",
+    "rag_fact_present": true,
+    "rag_cited_docs": [
+      "09_idle_resource_cleanup_runbook.md"
+    ]
+  },
+  {
+    "id": "q2_budget_120",
+    "question": "Who gets notified when an account crosses 120% of its budget?",
+    "answerable": true,
+    "expected_source": "10_budget_alert_escalation_playbook",
+    "direct_answer": "I don't have enough context to answer this question accurately. The notification process for budget overages depends on the specific system or platform you're referring to, such as:\n\n- A cloud service provider (AWS, Google Cloud, Azure, etc.)\n- An accounting or financial software\n- A project management tool\n- An internal company system\n- Something else\n\nCould you clarify which system or platform you're asking about? That way I can provide you with the correct information about who receives notifications when an account reaches 120% of its budget.",
+    "direct_verdict": "REFUSED",
+    "direct_latency_ms": 1902.5,
+    "rag_answer": "When an account crosses 120% of its budget, the following parties are notified: the account owner, team lead, engineering manager, CFM Office, and the Director of Engineering. This represents an escalation point where the Director of Engineering becomes involved and new provisioning is soft-blocked according to the governance policy.",
+    "rag_fact_present": true,
+    "rag_cited_docs": [
+      "10_budget_alert_escalation_playbook.md"
+    ]
+  },
+  {
+    "id": "q3_costcenter_format",
+    "question": "What is the required format for the CostCenter tag value?",
+    "answerable": true,
+    "expected_source": "08_resource_tagging_standard",
+    "direct_answer": "I don't have enough context to answer your question accurately. The \"CostCenter\" tag format can vary depending on what system or framework you're referring to, such as:\n\n- **AWS tags** - AWS allows CostCenter tag values to be strings with specific character restrictions\n- **Azure tags** - Azure has its own tag naming and value requirements\n- **Your organization's internal tagging policy** - Many companies define their own CostCenter tag formats\n- **A specific application or tool** - Different software may have different requirements\n\nCould you provide more context about which system or platform you're asking about? That way I can give you the specific format requirements you need.",
+    "direct_verdict": "REFUSED",
+    "direct_latency_ms": 2125.2,
+    "rag_answer": "The CostCenter tag value must always match the pattern of \"CC-\" followed by exactly four digits (for example, CC-4820).",
+    "rag_fact_present": true,
+    "rag_cited_docs": [
+      "08_resource_tagging_standard.md"
+    ]
+  },
+  {
+    "id": "q4_approval_25k",
+    "question": "Who must approve new recurring spend of $25,000 per month or more?",
+    "answerable": true,
+    "expected_source": "07_cloud_cost_governance_policy",
+    "direct_answer": "I don't have specific information about your organization's approval policies for recurring spending. Approval requirements for expenses of this magnitude typically vary significantly depending on:\n\n- Your company's size and industry\n- Your specific procurement or financial policies\n- Your role and department\n- Your organization's hierarchy and delegation of authority\n\nTo find the correct answer, I'd recommend:\n1. Checking your company's procurement or financial policies manual\n2. Asking your finance or accounting department\n3. Reviewing your organization's approval matrix or authorization limits\n4. Consulting with your manager or compliance team\n\nIs this for a specific organization where you have access to their policies?",
+    "direct_verdict": "REFUSED",
+    "direct_latency_ms": 2082.9,
+    "rag_answer": "New or increased recurring spend of $25,000 per month or more must be approved by the VP Engineering and the Finance Committee.",
+    "rag_fact_present": true,
+    "rag_cited_docs": [
+      "07_cloud_cost_governance_policy.md"
+    ]
+  },
+  {
+    "id": "q5_ri_discount",
+    "question": "What is the maximum discount a Standard Reserved Instance can offer versus On-Demand?",
+    "answerable": true,
+    "expected_source": "02_savings_plans_guide (real AWS doc)",
+    "direct_answer": "# AWS Reserved Instance Discounts\n\nFor **Standard Reserved Instances**, the maximum discount versus On-Demand pricing is typically:\n\n- **Up to 72% discount** for compute instances (EC2)\n- This varies by instance type, region, and commitment term\n\nThe discount structure generally works as follows:\n- **1-year commitment**: ~30-40% discount\n- **3-year commitment**: ~60-72% discount\n\n## Important Notes:\n\n- The exact discount percentage varies based on:\n  - Instance family and size\n  - AWS region\n  - Operating system\n  - Whether you pay All Upfront, Partial Upfront, or No Upfront\n\n- **Convertible Reserved Instances** offer lower discounts (typically up to 54%) but provide more flexibility to change instance attributes\n\nFor the most current and precise discount rates for your specific use case, I'd recommend checking the AWS Pricing Calculator or your AWS console, as these percentages can change and vary by region and instance type.",
+    "direct_verdict": "WRONG/GUESS",
+    "direct_latency_ms": 3394.2,
+    "rag_answer": "Sorry, I am unable to assist you with this request.",
+    "rag_fact_present": false,
+    "rag_cited_docs": []
+  },
+  {
+    "id": "q6_leave_policy",
+    "question": "What is the annual leave policy for employees?",
+    "answerable": false,
+    "expected_source": null,
+    "direct_answer": "I don't have access to a specific company's employee handbook or policies, so I can't tell you the exact annual leave policy for your organization.\n\nHowever, I can tell you that annual leave policies typically vary by:\n\n- **Company size and industry** - Different sectors have different norms\n- **Country/region** - Legal minimums vary significantly (e.g., EU countries often mandate 20+ days, while US policies are less standardized)\n- **Employment type** - Full-time vs. part-time employees may have different entitlements\n- **Tenure** - Some companies increase leave with years of service\n- **Role level** - Senior positions sometimes have different policies\n\n**To find your company's specific policy, I'd recommend:**\n1. Checking your employee handbook\n2. Asking your HR department directly\n3. Looking at your employment contract\n4. Checking your company's internal HR portal or intranet\n\nIs there something specific about annual leave policies in general I can help clarify, or are you looking for information about a particular country's legal requirements?",
+    "direct_verdict": "REFUSED (good)",
+    "direct_latency_ms": 3193.1,
+    "rag_answer": "I could not find information about an annual leave policy for employees in the provided search results. The search results contain information about AWS cloud cost governance policies, cost optimization frameworks, and resource tagging standards, but do not include any details about employee annual leave or time-off policies.",
+    "rag_fact_present": null,
+    "rag_cited_docs": []
+  },
+  {
+    "id": "q7_ceo_name",
+    "question": "Who is the CEO of the company?",
+    "answerable": false,
+    "expected_source": null,
+    "direct_answer": "I don't have enough context to answer your question. You've asked about \"the company,\" but you haven't specified which company you're referring to.\n\nCould you please clarify which company you're asking about? Once you do, I'd be happy to help you find information about their CEO.",
+    "direct_verdict": "REFUSED (good)",
+    "direct_latency_ms": 1692.6,
+    "rag_answer": "Sorry, I am unable to assist you with this request.",
+    "rag_fact_present": null,
+    "rag_cited_docs": []
+  },
+  {
+    "id": "q8_gpu_threshold",
+    "question": "What GPU utilization threshold defines an idle SageMaker training job in the cleanup policy?",
+    "answerable": false,
+    "expected_source": null,
+    "direct_answer": "I don't have specific information about the exact GPU utilization threshold that defines an idle SageMaker training job in AWS's cleanup policy.\n\nWhile AWS SageMaker does have mechanisms for monitoring and managing training jobs, the specific threshold values for idle detection in cleanup policies aren't something I can state with confidence without access to current AWS documentation.\n\nTo find this information, I'd recommend:\n\n1. **Checking AWS SageMaker documentation** - Look for sections on training job management and cleanup policies\n2. **AWS Support** - Contact AWS Support directly for the exact threshold specifications\n3. **SageMaker API documentation** - Review the API reference for any cleanup or idle detection parameters\n4. **AWS Console** - Check your SageMaker settings for any configurable idle thresholds\n\nIf you're working with a specific cleanup policy or feature, providing more context about which AWS service or feature you're referring to would help me give you a more targeted answer.",
+    "direct_verdict": "REFUSED (good)",
+    "direct_latency_ms": 2712.5,
+    "rag_answer": "The search results provided do not contain information about a GPU utilization threshold that defines an idle SageMaker training job in a cleanup policy. While the search results include information about SageMaker AI as a service and an idle resource cleanup runbook that defines idle criteria for various AWS resources (such as EC2 instances, RDS instances, and load balancers), there is no specific mention of SageMaker training job GPU utilization thresholds.",
+    "rag_fact_present": null,
+    "rag_cited_docs": [
+      "02_savings_plans_guide.pdf",
+      "09_idle_resource_cleanup_runbook.md"
+    ]
+  },
+  {
+    "id": "q9_healthcare",
+    "question": "What is our policy on healthcare reimbursement for remote workers?",
+    "answerable": false,
+    "expected_source": null,
+    "direct_answer": "I don't have access to your organization's specific policies or internal documents. I can't tell you what your company's healthcare reimbursement policy is for remote workers.\n\nTo find this information, I'd recommend:\n\n1. **Checking your employee handbook** - usually available on your company intranet or HR portal\n2. **Contacting your HR department directly** - they can provide the most accurate and current information\n3. **Reviewing your benefits documentation** - often sent during onboarding or annual enrollment\n4. **Checking your company intranet or benefits portal** - many companies post policies there\n\nIf you'd like, I can help explain general types of healthcare reimbursement policies that companies commonly offer for remote workers, but that wouldn't be specific to your organization.",
+    "direct_verdict": "REFUSED (good)",
+    "direct_latency_ms": 2254.5,
+    "rag_answer": "I could not find information about healthcare reimbursement for remote workers in the provided search results. The search results contain information about AWS cloud cost governance policies, AWS Savings Plans access policies, and general cloud resource management policies, but they do not address healthcare reimbursement policies for remote workers.\n\nTo answer your question, you would need to consult your organization's employee handbook, human resources department, or benefits administration documentation.",
+    "rag_fact_present": null,
+    "rag_cited_docs": []
+  },
+  {
+    "id": "q10_france",
+    "question": "What is the capital of France?",
+    "answerable": false,
+    "expected_source": null,
+    "direct_answer": "The capital of France is Paris.",
+    "direct_verdict": "HALLUCINATED",
+    "direct_latency_ms": 1968.5,
+    "rag_answer": "Sorry, I am unable to assist you with this request.",
+    "rag_fact_present": null,
+    "rag_cited_docs": []
+  }
+]

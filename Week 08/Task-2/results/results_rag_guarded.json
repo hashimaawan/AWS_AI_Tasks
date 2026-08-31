@@ -1,0 +1,157 @@
+{
+  "q1_idle_ec2": {
+    "status": "ok",
+    "question": "What CPU utilization threshold defines an idle EC2 instance in the cleanup policy?",
+    "answerable": true,
+    "answer": "An EC2 instance is classified as idle when it has average CPU utilization below 3% AND network I/O below 5 MB/day, measured over a continuous 14-day observation window.",
+    "fact_present": true,
+    "num_citations": 1,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [
+      {
+        "text": "# Idle Resource Cleanup Runbook\n**Document ID:** FIN-CLEAN-003\n**Version:** 3.1\n**Effective date:** 1 February 2026\n**Owner:** Platform Engineering + Cloud Financial Management (CFM) Office\n**Purpose:** Define what counts as an idle/wasteful resource, how long it is retained, and the exact steps to reclaim it.\n---\n## 1. Overview\nThis runbook governs the identification and safe removal of idle and wasteful cloud resources. It is the operational counterpart to the Cloud Cost Governance Policy (FIN-GOV-001). Automated cleanup follows a strict **detect \u2192 notify \u2192 grace period \u2192 reclaim** sequence with human approval before any deletion.\n## 2. Definitions of \"idle\"\nA resource is classified as **idle** when it meets the service-specific criteria below, measured over a **continuous 14-day observation window** unless stated otherwise.\n| Resource type | Idle criteria |\n|-|-|\n| EC2 instance | Average CPU utilization below **3%** AND network I/O below **5 MB/day** for 14 days |\n| EBS volume | In `available` (unattached) state for **7 days** or more |\n| Elastic IP | Not associated with any running instance for **3 days** or more |\n| RDS instance | Zero connections for **14 days** AND CPU below **5%** |\n| Load balancer | Zero request count for **14 days** |\n| Snapshot | Older than **90 days** AND not referenced by any AMI |\n| S3 bucket | No `GET`/`PUT` activity for **180 days** |\nA resource meeting any of the above is labeled **\"zombie\"** in the cleanup dashboard.\n## 3. Retention and grace periods\n- Once flagged as a zombie, the resource owner is notified and a **grace period of 10 business days** begins.\n- During the grace period the owner may **snooze** the flag once, extending it by a further **14 calendar days**, by recording a justification.\n- EC2 instances flagged as zombies are first **stopped** (not terminated) after the grace period. Stopped zombie instances are retained for an additional **30 days** before termination.\n- EBS volumes are **snapshotted** before deletion, and the snapshot is retained for **60 days**.\n## 4. Reclaim procedure (step by step)\n1. **Detect** \u2014 the daily scan writes all zombie candidates to the cleanup dashboard with their idle metric, owner, and estimated monthly cost.\n2. **Attribute** \u2014 each candidate is matched to its `Owner` and `CostCenter` tags. Untagged candidates are routed to the Platform Engineering queue.\n3. **Notify** \u2014 the owner receives a notification listing the resource, why it was flagged, and the grace-period deadline.\n4. **Grace period** \u2014 10 business days for the owner to act or snooze.\n5. **Approve** \u2014 before any destructive action, a human approver from the CFM Office must confirm. **No resource is ever deleted automatically without this approval gate.**\n6. **Reclaim** \u2014 stop/snapshot as per section 3, then delete after the retention window.\n7. **Record** \u2014 the reclaimed resource, its final cost saving, and the approver are logged to the monthly savings report.\n## 5. Protected resources (never auto-flagged)\nThe following are **exempt** from automated cleanup regardless of idle metrics:\n- Any resource tagged `DoNotDelete = true`.\n- Resources in accounts tagged `Environment = prod` that also carry `CriticalService = true`.\n- Backup vaults and their contents.\n- Any resource created within the last **21 days** (grace for new/experimental workloads).\n## 6. Savings targets\n- The cleanup program targets a minimum of **$8,000/month** in reclaimed spend across all accounts.\n- Reclaimed savings are reported monthly and attributed back to the originating `CostCenter`.\n---\n*This runbook defines internal, organization-specific thresholds. It is not AWS default behavior.*\n",
+        "source": "s3://w8t2-aw/documents/09_idle_resource_cleanup_runbook.md"
+      }
+    ],
+    "latency_ms": 5866.7,
+    "unguarded_answer": "An EC2 instance is classified as idle when it has average CPU utilization below 3% and network I/O below 5 MB/day, measured over a continuous 14-day observation window."
+  },
+  "q2_budget_120": {
+    "status": "ok",
+    "question": "Who gets notified when an account crosses 120% of its budget?",
+    "answerable": true,
+    "answer": "When an account crosses 120% of its budget, the following people are notified: the account owner, the team lead, the engineering manager, the CFM Office, and the Director of Engineering.",
+    "fact_present": true,
+    "num_citations": 1,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [
+      {
+        "text": "# Budget Alert & Escalation Playbook\n**Document ID:** FIN-ALERT-004\n**Version:** 1.4\n**Effective date:** 20 February 2026\n**Owner:** Cloud Financial Management (CFM) Office\n**Purpose:** Define budget alert thresholds, who is notified at each level, and how cost overruns are escalated.\n---\n## 1. Purpose\nThis playbook specifies the automated budget alerting configuration and the human escalation chain that activates when an account approaches or exceeds its allocated budget. It operationalizes the budget enforcement rules in the Cloud Cost Governance Policy (FIN-GOV-001).\n## 2. Alert thresholds and recipients\nEach account is configured with AWS Budgets alerts at the following thresholds of its **monthly allocated budget**. Both **actual** and **forecasted** spend are monitored.\n| Threshold | Trigger type | Notified |\n|-|-|-|\n| **50%** | Forecasted | Account owner only (informational) |\n| **80%** | Actual | Account owner + Team lead |\n| **90%** | Forecasted | Account owner + Engineering manager |\n| **100%** | Actual | Account owner + Engineering manager + CFM Office |\n| **120%** | Actual | All of the above + Director of Engineering (escalation) |\nAlerts are delivered by **email** and to the team's **Slack channel** via an Amazon SNS topic named `finops-budget-alerts`.\n## 3. Escalation chain\nWhen an account crosses **100% of budget**:\n1. The CFM Office opens a **cost incident ticket** within **4 business hours**.\n2. The account owner must provide a written explanation and remediation plan within **2 business days**.\n3. If spend crosses **120%**, the Director of Engineering is engaged and new provisioning is soft-blocked per the governance policy.\n4. If no remediation plan is received within the 2-business-day window, the account's provisioning is soft-blocked until a plan is submitted.\n## 4. Anomaly detection\n- AWS Cost Anomaly Detection is enabled on **every account** with a monitor of type \"AWS services.\"\n- An anomaly alert fires when a detected anomaly exceeds **$200** in impact **or** represents a **40%** deviation from the expected spend, whichever is smaller.\n- Anomaly alerts route to the same `finops-budget-alerts` SNS topic and are reviewed by the CFM Office within **1 business day**.\n## 5. Alert data freshness\n- AWS Budgets data refreshes up to **three times per day**; alerts may lag actual spend by **8 to 12 hours**. This lag is acceptable for budget alerting but is **not** relied upon for real-time cost control.\n## 6. Quiet hours and noise control\n- Informational (50% forecasted) alerts are suppressed between **22:00 and 07:00** local time and batched into a morning digest.\n- Actual-spend alerts at 80% and above are **never** suppressed and are sent immediately at any hour.\n- To prevent alert fatigue, each unique threshold fires **at most once per budget period** per account.\n## 7. Ownership of the alerting configuration\n- Only the **CFM Office** may create or modify budget alert thresholds and the `finops-budget-alerts` SNS topic.\n- Teams may **subscribe** additional recipients to their own account's alerts but may not change the thresholds.\n---\n*Thresholds and recipients in this playbook are organization-specific internal standards, not AWS defaults. For AWS Budgets feature guidance, see the accompanying AWS Cost Management (Budgets) documentation.*\n",
+        "source": "s3://w8t2-aw/documents/10_budget_alert_escalation_playbook.md"
+      }
+    ],
+    "latency_ms": 2649.9,
+    "unguarded_answer": "When an account crosses 120% of its budget, the following parties are notified: the account owner, team lead, engineering manager, CFM Office, and the Director of Engineering. This represents an escalation point where the Director of Engineering becomes involved and new provisioning is soft-blocked according to the governance policy."
+  },
+  "q3_costcenter_format": {
+    "status": "ok",
+    "question": "What is the required format for the CostCenter tag value?",
+    "answerable": true,
+    "answer": "The CostCenter tag value must follow the format \"CC-\" followed by exactly four digits (e.g., CC-4820).",
+    "fact_present": true,
+    "num_citations": 1,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [
+      {
+        "text": "# Resource Tagging Standard\n**Document ID:** FIN-TAG-002\n**Version:** 1.7\n**Effective date:** 15 January 2026\n**Owner:** Cloud Financial Management (CFM) Office\n**Applies to:** All AWS accounts and all taggable resources\n---\n## 1. Purpose\nThis standard defines the mandatory and optional tags that must be applied to AWS resources so that cost, ownership, and lifecycle can be tracked accurately. Consistent tagging is the foundation of cost allocation, chargeback, and automated cleanup.\n## 2. Mandatory tags\nEvery taggable resource **must** carry all of the following five tags at creation time. Resources missing any mandatory tag are considered non-compliant.\n| Tag key | Description | Example value | Allowed values |\n|-|-|-|-|\n| `Owner` | Email of the individual responsible | `jane.doe@example.com` | Any valid company email |\n| `CostCenter` | Finance cost-center code | `CC-4820` | Format `CC-####` |\n| `Environment` | Deployment stage | `prod` | `prod`, `staging`, `dev`, `sandbox` |\n| `Project` | Project or product name | `atlas-billing` | Lowercase, hyphenated |\n| `ExpiryDate` | Date after which resource may be cleaned up | `2026-12-31` | ISO format `YYYY-MM-DD` |\n## 3. Tag key formatting rules\n- Tag keys use **PascalCase** (e.g., `CostCenter`, not `cost_center` or `costcenter`).\n- Tag **values** for `Project` use **lowercase-hyphenated** format.\n- The `CostCenter` value must always match the pattern `CC-` followed by exactly **four digits**.\n- Multi-valued tags are **prohibited** \u2014 each tag key holds a single value only.\n## 4. Optional (recommended) tags\n| Tag key | Purpose |\n|-|-|\n| `Team` | Owning team name, for group-level reporting |\n| `DataClassification` | One of `public`, `internal`, `confidential`, `restricted` |\n| `AutoShutdown` | `true` or `false` \u2014 whether the resource is eligible for scheduled shutdown |\n## 5. Cost allocation activation\n- Only the **management (payer) account** may activate tags for cost allocation in the Billing console.\n- The five mandatory tags are activated as **cost allocation tags** by the CFM Office.\n- Note that cost allocation tags are **not retrospective** \u2014 they only appear in billing data after activation, so tagging must happen *before* spend is incurred to be useful.\n## 6. Enforcement\n- A daily automated scan checks all resources for the five mandatory tags.\n- Resources missing one or more mandatory tags are recorded in the **Tag Compliance Report** and their owners notified.\n- Any resource that remains non-compliant for more than **7 calendar days** is automatically assigned the tag `ComplianceStatus = quarantined` and becomes a candidate for the Idle Resource Cleanup process (see FIN-CLEAN-003).\n- Untagged resources are **not** permitted in production accounts; a Service Control Policy denies creation of untagged EC2 and RDS resources in accounts tagged `Environment = prod`.\n## 7. Exceptions\nTemporary tagging exceptions may be requested from the CFM Office and are granted for a maximum of **30 days**.\n---\n*For AWS-native tagging guidance and cost allocation concepts, refer to the accompanying AWS \"Best Practices for Tagging AWS Resources\" whitepaper.*\n",
+        "source": "s3://w8t2-aw/documents/08_resource_tagging_standard.md"
+      }
+    ],
+    "latency_ms": 2665.5,
+    "unguarded_answer": "The CostCenter tag value must always match the pattern of \"CC-\" followed by exactly four digits (for example, CC-4820)."
+  },
+  "q4_approval_25k": {
+    "status": "ok",
+    "question": "Who must approve new recurring spend of $25,000 per month or more?",
+    "answerable": true,
+    "answer": "New recurring spend of $25,000 per month or more must be approved by the VP Engineering and the Finance Committee. The maximum approval time for this tier is 5 business days.",
+    "fact_present": true,
+    "num_citations": 1,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [
+      {
+        "text": "# Cloud Cost Governance Policy\n**Document ID:** FIN-GOV-001\n**Version:** 2.3\n**Effective date:** 1 March 2026\n**Review cycle:** Every 6 months\n**Owner:** Cloud Financial Management (CFM) Office\n---\n## 1. Purpose\nThis policy defines how cloud spending is approved, monitored, and controlled across all AWS accounts operated by the organization. It establishes spend approval thresholds, ownership rules, and the escalation path for cost overruns. All engineering teams provisioning cloud resources are bound by this policy.\n## 2. Scope\nThis policy applies to every AWS account under the organization's management, including production, staging, sandbox, and shared-services accounts. It covers all billable AWS services.\n## 3. Spend approval thresholds\nNew or increased recurring spend must be approved before provisioning, according to the following tiers:\n| Monthly recurring spend | Approver required | Maximum approval time |\n|-|-|-|\n| Under $500/month | Team lead | 1 business day |\n| $500 to $4,999/month | Engineering manager | 2 business days |\n| $5,000 to $24,999/month | Director of Engineering + CFM Office | 3 business days |\n| $25,000/month or more | VP Engineering + Finance Committee | 5 business days |\nOne-time (non-recurring) spend above **$10,000** requires Director-level approval regardless of service.\n## 4. Ownership rules\n- Every provisioned resource **must** have a designated owner recorded in the `Owner` tag (see the Resource Tagging Standard, document FIN-TAG-002).\n- An account without an assigned **Cost Owner** may not exceed **$2,000** in total monthly spend until an owner is assigned.\n- Ownership of shared-services resources defaults to the **Platform Engineering team** unless explicitly reassigned.\n## 5. Budget enforcement\n- Each account is assigned a monthly budget by the CFM Office at the start of each fiscal quarter.\n- When actual spend reaches **80%** of the assigned monthly budget, the account owner receives an automated alert (see the Budget Alert & Escalation Playbook, FIN-ALERT-004).\n- When actual spend reaches **100%** of budget, new resource provisioning in that account is **soft-blocked**: a Service Control Policy denies creation of EC2, RDS, and SageMaker resources until the CFM Office grants an exception.\n- Budget exceptions are granted for a maximum of **14 days** and must be re-approved thereafter.\n## 6. Cost review cadence\n- The CFM Office publishes a **monthly cost report** to all engineering managers by the **5th business day** of each month.\n- Any account whose spend grew by more than **30% month-over-month** is automatically flagged for a mandatory cost review.\n- Teams are expected to respond to a flagged review within **10 business days**.\n## 7. Commitment purchases (Savings Plans and Reserved Instances)\n- Only the **CFM Office** is authorized to purchase Savings Plans or Reserved Instances. Individual teams may not purchase commitments directly.\n- The organization targets a **minimum of 65%** commitment coverage on steady-state compute.\n- Commitment purchases use a **1-year, no-upfront** term by default unless a 3-year term is specifically justified in writing.\n## 8. Non-compliance\nAccounts found in repeated violation of this policy (three or more flagged reviews in a rolling 6-month window) may have their monthly budget reduced by **15%** at the next quarterly allocation, at the discretion of the CFM Office.\n---\n*This is an internal governance document. For AWS-native cost tooling guidance, refer to the accompanying AWS Well-Architected Cost Optimization Pillar whitepaper.*\n",
+        "source": "s3://w8t2-aw/documents/07_cloud_cost_governance_policy.md"
+      }
+    ],
+    "latency_ms": 2625.6,
+    "unguarded_answer": "New or increased recurring spend of $25,000 per month or more must be approved by the VP Engineering and the Finance Committee."
+  },
+  "q5_ri_discount": {
+    "status": "ok",
+    "question": "What is the maximum discount a Standard Reserved Instance can offer versus On-Demand?",
+    "answerable": true,
+    "answer": "Sorry, I am unable to assist you with this request.",
+    "fact_present": false,
+    "num_citations": 0,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [],
+    "latency_ms": 3452.0,
+    "unguarded_answer": "Sorry, I am unable to assist you with this request."
+  },
+  "q6_leave_policy": {
+    "status": "ok",
+    "question": "What is the annual leave policy for employees?",
+    "answerable": false,
+    "answer": "I could not find information about an annual leave policy for employees in the provided search results. The search results contain information about cloud cost governance policies, AWS tagging standards, and cost optimization procedures, but do not include any details regarding employee leave, vacation, or time-off policies.",
+    "fact_present": null,
+    "num_citations": 0,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [],
+    "latency_ms": 3152.9,
+    "unguarded_answer": "I could not find information about an annual leave policy for employees in the provided search results. The search results contain information about AWS cloud cost governance policies, cost optimization frameworks, and resource tagging standards, but do not include any details about employee annual leave or time-off policies."
+  },
+  "q7_ceo_name": {
+    "status": "ok",
+    "question": "Who is the CEO of the company?",
+    "answerable": false,
+    "answer": "Sorry, I am unable to assist you with this request.",
+    "fact_present": null,
+    "num_citations": 0,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [],
+    "latency_ms": 2596.0,
+    "unguarded_answer": "Sorry, I am unable to assist you with this request."
+  },
+  "q8_gpu_threshold": {
+    "status": "ok",
+    "question": "What GPU utilization threshold defines an idle SageMaker training job in the cleanup policy?",
+    "answerable": false,
+    "answer": "The search results provided do not contain information about a GPU utilization threshold for defining idle SageMaker training jobs in a cleanup policy. While the search results include a detailed \"Idle Resource Cleanup Runbook\" that defines idle criteria for various AWS resources like EC2 instances, EBS volumes, RDS instances, and load balancers, there is no mention of SageMaker training jobs or GPU utilization metrics in the cleanup policy definitions.",
+    "fact_present": null,
+    "num_citations": 1,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [
+      {
+        "text": "# Idle Resource Cleanup Runbook\n**Document ID:** FIN-CLEAN-003\n**Version:** 3.1\n**Effective date:** 1 February 2026\n**Owner:** Platform Engineering + Cloud Financial Management (CFM) Office\n**Purpose:** Define what counts as an idle/wasteful resource, how long it is retained, and the exact steps to reclaim it.\n---\n## 1. Overview\nThis runbook governs the identification and safe removal of idle and wasteful cloud resources. It is the operational counterpart to the Cloud Cost Governance Policy (FIN-GOV-001). Automated cleanup follows a strict **detect \u2192 notify \u2192 grace period \u2192 reclaim** sequence with human approval before any deletion.\n## 2. Definitions of \"idle\"\nA resource is classified as **idle** when it meets the service-specific criteria below, measured over a **continuous 14-day observation window** unless stated otherwise.\n| Resource type | Idle criteria |\n|-|-|\n| EC2 instance | Average CPU utilization below **3%** AND network I/O below **5 MB/day** for 14 days |\n| EBS volume | In `available` (unattached) state for **7 days** or more |\n| Elastic IP | Not associated with any running instance for **3 days** or more |\n| RDS instance | Zero connections for **14 days** AND CPU below **5%** |\n| Load balancer | Zero request count for **14 days** |\n| Snapshot | Older than **90 days** AND not referenced by any AMI |\n| S3 bucket | No `GET`/`PUT` activity for **180 days** |\nA resource meeting any of the above is labeled **\"zombie\"** in the cleanup dashboard.\n## 3. Retention and grace periods\n- Once flagged as a zombie, the resource owner is notified and a **grace period of 10 business days** begins.\n- During the grace period the owner may **snooze** the flag once, extending it by a further **14 calendar days**, by recording a justification.\n- EC2 instances flagged as zombies are first **stopped** (not terminated) after the grace period. Stopped zombie instances are retained for an additional **30 days** before termination.\n- EBS volumes are **snapshotted** before deletion, and the snapshot is retained for **60 days**.\n## 4. Reclaim procedure (step by step)\n1. **Detect** \u2014 the daily scan writes all zombie candidates to the cleanup dashboard with their idle metric, owner, and estimated monthly cost.\n2. **Attribute** \u2014 each candidate is matched to its `Owner` and `CostCenter` tags. Untagged candidates are routed to the Platform Engineering queue.\n3. **Notify** \u2014 the owner receives a notification listing the resource, why it was flagged, and the grace-period deadline.\n4. **Grace period** \u2014 10 business days for the owner to act or snooze.\n5. **Approve** \u2014 before any destructive action, a human approver from the CFM Office must confirm. **No resource is ever deleted automatically without this approval gate.**\n6. **Reclaim** \u2014 stop/snapshot as per section 3, then delete after the retention window.\n7. **Record** \u2014 the reclaimed resource, its final cost saving, and the approver are logged to the monthly savings report.\n## 5. Protected resources (never auto-flagged)\nThe following are **exempt** from automated cleanup regardless of idle metrics:\n- Any resource tagged `DoNotDelete = true`.\n- Resources in accounts tagged `Environment = prod` that also carry `CriticalService = true`.\n- Backup vaults and their contents.\n- Any resource created within the last **21 days** (grace for new/experimental workloads).\n## 6. Savings targets\n- The cleanup program targets a minimum of **$8,000/month** in reclaimed spend across all accounts.\n- Reclaimed savings are reported monthly and attributed back to the originating `CostCenter`.\n---\n*This runbook defines internal, organization-specific thresholds. It is not AWS default behavior.*\n",
+        "source": "s3://w8t2-aw/documents/09_idle_resource_cleanup_runbook.md"
+      }
+    ],
+    "latency_ms": 3059.6,
+    "unguarded_answer": "The search results provided do not contain information about a GPU utilization threshold that defines an idle SageMaker training job in a cleanup policy. While the search results include information about SageMaker AI as a service and an idle resource cleanup runbook that defines idle criteria for various AWS resources (such as EC2 instances, RDS instances, and load balancers), there is no specific mention of SageMaker training job GPU utilization thresholds."
+  },
+  "q9_healthcare": {
+    "status": "ok",
+    "question": "What is our policy on healthcare reimbursement for remote workers?",
+    "answerable": false,
+    "answer": "I cannot answer this based on the provided documents.",
+    "fact_present": null,
+    "num_citations": 0,
+    "guardrail_action": "INTERVENED",
+    "blocked_by_guardrail": true,
+    "citations": [],
+    "latency_ms": 3191.0,
+    "unguarded_answer": "I could not find information about healthcare reimbursement for remote workers in the provided search results. The search results contain information about AWS cloud cost governance policies, AWS Savings Plans access policies, and general cloud resource management policies, but they do not address healthcare reimbursement policies for remote workers.\n\nTo answer your question, you would need to consult your organization's employee handbook, human resources department, or benefits administration documentation."
+  },
+  "q10_france": {
+    "status": "ok",
+    "question": "What is the capital of France?",
+    "answerable": false,
+    "answer": "Sorry, I am unable to assist you with this request.",
+    "fact_present": null,
+    "num_citations": 0,
+    "guardrail_action": "NONE",
+    "blocked_by_guardrail": false,
+    "citations": [],
+    "latency_ms": 2379.3,
+    "unguarded_answer": "Sorry, I am unable to assist you with this request."
+  }
+}

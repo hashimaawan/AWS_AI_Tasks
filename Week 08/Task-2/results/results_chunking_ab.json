@@ -1,0 +1,237 @@
+{
+  "fixed": {
+    "label": "FIXED-SIZE (300/20)",
+    "kb_id": "F5ZVEGYXLA",
+    "accuracy": 1.0,
+    "hits": 9,
+    "total": 9,
+    "rows": [
+      {
+        "id": "idle_ec2",
+        "expect": "09_idle_resource_cleanup_runbook",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "09_idle_resource_cleanup_runbook.md",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "budget_120",
+        "expect": "10_budget_alert_escalation_playbook",
+        "hit": true,
+        "rank": 2,
+        "top_docs": [
+          "02_savings_plans_guide.pdf",
+          "10_budget_alert_escalation_playbook.md",
+          "05_aws_budgets_guide.pdf"
+        ]
+      },
+      {
+        "id": "costcenter",
+        "expect": "08_resource_tagging_standard",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "08_resource_tagging_standard.md",
+          "04_tagging_strategy_cost_usage.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "04_tagging_strategy_cost_usage.pdf"
+        ]
+      },
+      {
+        "id": "approval_25k",
+        "expect": "07_cloud_cost_governance_policy",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "07_cloud_cost_governance_policy.md",
+          "10_budget_alert_escalation_playbook.md",
+          "05_aws_budgets_guide.pdf"
+        ]
+      },
+      {
+        "id": "tagging_mand",
+        "expect": "08_resource_tagging_standard",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "08_resource_tagging_standard.md",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf"
+        ]
+      },
+      {
+        "id": "cfm_pillars",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "rightsizing",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "showback",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf"
+        ]
+      },
+      {
+        "id": "matched_supply",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      }
+    ]
+  },
+  "hierarchical": {
+    "label": "HIERARCHICAL",
+    "kb_id": "TAK2AVO94U",
+    "accuracy": 1.0,
+    "hits": 9,
+    "total": 9,
+    "rows": [
+      {
+        "id": "idle_ec2",
+        "expect": "09_idle_resource_cleanup_runbook",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "09_idle_resource_cleanup_runbook.md",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "budget_120",
+        "expect": "10_budget_alert_escalation_playbook",
+        "hit": true,
+        "rank": 2,
+        "top_docs": [
+          "02_savings_plans_guide.pdf",
+          "10_budget_alert_escalation_playbook.md",
+          "01_cost_optimization_pillar.pdf",
+          "05_aws_budgets_guide.pdf"
+        ]
+      },
+      {
+        "id": "costcenter",
+        "expect": "08_resource_tagging_standard",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "08_resource_tagging_standard.md",
+          "04_tagging_strategy_cost_usage.pdf",
+          "04_tagging_strategy_cost_usage.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "approval_25k",
+        "expect": "07_cloud_cost_governance_policy",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "07_cloud_cost_governance_policy.md",
+          "10_budget_alert_escalation_playbook.md",
+          "05_aws_budgets_guide.pdf"
+        ]
+      },
+      {
+        "id": "tagging_mand",
+        "expect": "08_resource_tagging_standard",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "08_resource_tagging_standard.md",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf",
+          "04_tagging_strategy_cost_usage.pdf"
+        ]
+      },
+      {
+        "id": "cfm_pillars",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "rightsizing",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      },
+      {
+        "id": "showback",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "03_tagging_best_practices.pdf",
+          "03_tagging_best_practices.pdf"
+        ]
+      },
+      {
+        "id": "matched_supply",
+        "expect": "01_cost_optimization_pillar",
+        "hit": true,
+        "rank": 1,
+        "top_docs": [
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf",
+          "01_cost_optimization_pillar.pdf"
+        ]
+      }
+    ]
+  }
+}
