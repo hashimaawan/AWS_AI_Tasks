@@ -126,7 +126,7 @@
       }
     ],
     "latency_ms": 3059.6,
-    "unguarded_answer": "The search results provided do not contain information about a GPU utilization threshold that defines an idle SageMaker training job in a cleanup policy. While the search results include information about SageMaker AI as a service and an idle resource cleanup runbook that defines idle criteria for various AWS resources (such as EC2 instances, RDS instances, and load balancers), there is no specific mention of SageMaker training job GPU utilization thresholds."
+    "unguarded_answer": "+n about a GPU utilization threshold that defines an idle SageMaker training job in a cleanup policy. While the search results include information about SageMaker AI as a service and an idle resource cleanup runbook that defines idle criteria for various AWS resources (such as EC2 instances, RDS instances, and load balancers), there is no specific mention of SageMaker training job GPU utilization thresholds."
   },
   "q9_healthcare": {
     "status": "ok",

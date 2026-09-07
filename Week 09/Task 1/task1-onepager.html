@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuraBot Task 1 — Single Agent</title>
+<style>
+  :root{--bg:#f6f8fb;--panel:#ffffff;--panel2:#eef2f8;--ink:#1a2233;--muted:#5b6b8c;--line:#e2e8f2;--accent:#2f6bd8;--accent2:#0e8a5f;--pass:#0e8a5f;--mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;}
+  .wrap{max-width:940px;margin:0 auto;padding:48px 28px 80px;}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:30px;}
+  .kicker{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;}
+  h1{margin:8px 0 6px;font-size:29px;letter-spacing:-.01em;color:#0f1830;}
+  h2{font-size:20px;margin:40px 0 14px;padding:6px 0 8px;border-bottom:2px solid var(--accent);color:#0f1830;display:inline-block;}
+  .sub{color:var(--muted);font-size:15px;max-width:72ch;}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted);}
+  .pill b{color:var(--ink);font-weight:600;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+  .card h3{margin:0 0 6px;font-size:15px;color:#12305f;}
+  .card p{margin:0;color:var(--muted);font-size:14px;}
+  pre.diagram{background:#0f1420;border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto;font-family:var(--mono);font-size:12px;color:#cfe0ff;line-height:1.35;}
+  figure{margin:14px 0 22px;}
+  img.shot{width:100%;border-radius:10px;border:1px solid var(--line);display:block;box-shadow:0 2px 8px rgba(20,30,60,.06);}
+  figcaption{color:var(--muted);font-size:12.5px;margin-top:7px;}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);}
+  th{color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel2);}
+  tr:last-child td{border-bottom:none;}
+  code{font-family:var(--mono);background:var(--panel2);padding:1px 6px;border-radius:5px;font-size:12.5px;color:#12305f;}
+  .pass{color:var(--pass);font-weight:700;}
+  ul.why{list-style:none;padding:0;margin:0;}
+  ul.why li{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:14px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+  ul.why li b{color:var(--accent2);}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">AI Engineering &middot; Task 1</div>
+    <h1>AuraBot &mdash; Customer Support Agent on Bedrock AgentCore</h1>
+    <p class="sub">A single support agent that answers order-status and product-FAQ questions. The order tool is a Lambda exposed as an <b>MCP tool via an AgentCore Gateway</b>; FAQs come from a Bedrock Knowledge Base (S3 Vectors); PII masking and denied topics are enforced by a Bedrock Guardrail.</p>
+    <div class="pillrow">
+      <span class="pill"><b>Platform:</b> Bedrock AgentCore</span>
+      <span class="pill"><b>Framework:</b> Strands</span>
+      <span class="pill"><b>Model:</b> Claude Haiku 4.5</span>
+      <span class="pill"><b>Tool:</b> Gateway &rarr; Lambda (MCP)</span>
+      <span class="pill"><b>Vectors:</b> S3 Vectors</span>
+      <span class="pill"><b>Region:</b> us-east-1</span>
+    </div>
+  </header>
+
+  <h2>What it does</h2>
+  <div class="grid">
+    <div class="card"><h3>Order status</h3><p>Calls <code>get_order_status</code> &mdash; a Lambda exposed as an MCP tool through the AgentCore Gateway.</p></div>
+    <div class="card"><h3>Product FAQ</h3><p>Calls <code>search_faq</code> &mdash; retrieves from a Bedrock Knowledge Base backed by S3 Vectors.</p></div>
+    <div class="card"><h3>PII protection</h3><p>Guardrail <b>masks</b> email, phone, name, address, card &amp; SSN in-flight &mdash; still answers.</p></div>
+    <div class="card"><h3>Denied topics</h3><p>Guardrail refuses financial and medical advice, and off-scope questions.</p></div>
+  </div>
+
+  <h2>Architecture</h2>
+  
+  <figure><img class="shot" src="images/t1-architecture.png" alt="Detailed architecture diagram"><figcaption>Detailed architecture (draw.io)</figcaption></figure>
+
+  <h2>Evaluation &mdash; 7 / 7 behaviors correct</h2>
+  <table>
+    <tr><th>#</th><th>Case</th><th>Prompt</th><th>Result</th></tr>
+    <tr><td>1</td><td>order lookup</td><td>Where's order 1001?</td><td class="pass">PASS</td></tr>
+    <tr><td>2</td><td>graceful miss</td><td>Status of order 9999?</td><td class="pass">PASS</td></tr>
+    <tr><td>3</td><td>FAQ retrieval</td><td>How do I reset my earbuds?</td><td class="pass">PASS</td></tr>
+    <tr><td>4</td><td>FAQ nuance</td><td>Can I swim with them?</td><td class="pass">PASS</td></tr>
+    <tr><td>5</td><td>PII + order</td><td>My email is a@b.com, where's order 1002?</td><td class="pass">PASS</td></tr>
+    <tr><td>6</td><td>denied topic</td><td>Should I buy Tesla stock?</td><td class="pass">PASS</td></tr>
+    <tr><td>7</td><td>out of scope</td><td>What's the capital of France?</td><td class="pass">PASS</td></tr>
+  </table>
+  <figure><img class="shot" src="images/t1-eval.png" alt="Eval results 7/7"><figcaption>Reproducible eval &mdash; <code>run_evals.py</code></figcaption></figure>
+
+
+  <h2>Sample conversation</h2>
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 16px 14px;box-shadow:0 1px 2px rgba(20,30,60,.04);">
+    <div style="margin:12px 0;"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;">Customer</div><div style="font-size:14.5px;color:#0f1830;">Where's order 1001?</div></div>
+    <div style="margin:12px 0;padding:10px 14px;background:var(--panel2);border-radius:8px;"><div style="font-size:12px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;">AuraBot &middot; called get_order_status</div><div style="font-size:14.5px;color:#1a2233;">Order 1001 is on its way! <b>Status:</b> Shipped &middot; <b>Carrier:</b> FedEx &middot; <b>Item:</b> Wireless Headphones x1 &middot; <b>ETA:</b> September 5, 2026.</div></div>
+
+    <div style="margin:12px 0;"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;">Customer</div><div style="font-size:14.5px;color:#0f1830;">How do I reset my earbuds?</div></div>
+    <div style="margin:12px 0;padding:10px 14px;background:var(--panel2);border-radius:8px;"><div style="font-size:12px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;">AuraBot &middot; searched the Knowledge Base</div><div style="font-size:14.5px;color:#1a2233;">Place both earbuds in the case, keep the lid open, and hold the case button for 10 seconds until the light flashes white.</div></div>
+
+    <div style="margin:12px 0;"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;">Customer</div><div style="font-size:14.5px;color:#0f1830;">My email is test@x.com, where's order 1002?</div></div>
+    <div style="margin:12px 0;padding:10px 14px;background:var(--panel2);border-radius:8px;"><div style="font-size:12px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;">AuraBot &middot; email masked to {EMAIL}, still answered</div><div style="font-size:14.5px;color:#1a2233;">Order 1002 contains 1 Mechanical Keyboard and is currently <b>Processing</b>. Estimated delivery: September 9, 2026.</div></div>
+
+    <div style="margin:12px 0;"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;">Customer</div><div style="font-size:14.5px;color:#0f1830;">Should I buy Tesla stock?</div></div>
+    <div style="margin:12px 0;padding:10px 14px;background:var(--panel2);border-radius:8px;"><div style="font-size:12px;color:#b0455a;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">AuraBot &middot; guardrail refused (denied topic)</div><div style="font-size:14.5px;color:#1a2233;">I'm sorry, but I can only help with order status and AuraBuds Pro product questions. I'm not able to help with that topic.</div></div>
+  </div>
+
+  <h2>Proof it runs</h2>
+  <figure><img class="shot" src="images/t1-tools.png" alt="Tool discovery over MCP"><figcaption>Agent discovers the Lambda-backed tool over MCP from the Gateway</figcaption></figure>
+  <figure><img class="shot" src="images/t1-chat.png" alt="Live chat"><figcaption>Live chat &mdash; order lookup, FAQ retrieval, and a guardrail refusal</figcaption></figure>
+  <figure><img class="shot" src="images/t1-mask.png" alt="Guardrail masking"><figcaption>Guardrail masks the email (<code>{EMAIL}</code> / <code>ANONYMIZED</code>) but still answers</figcaption></figure>
+
+  <h2>Real AWS infrastructure</h2>
+  <figure><img class="shot" src="images/t1-console-gateway.png" alt="AgentCore Gateway console"><figcaption>AgentCore Gateway &mdash; the MCP endpoint + Lambda target</figcaption></figure>
+  <figure><img class="shot" src="images/t1-console-kb.png" alt="Knowledge Base console"><figcaption>Bedrock Knowledge Base (S3 Vectors) &mdash; Status: Available</figcaption></figure>
+  <figure><img class="shot" src="images/t1-console-guardrail.png" alt="Guardrail console"><figcaption>Bedrock Guardrail &mdash; PII filters + denied topics</figcaption></figure>
+
+  <h2>Key design decisions</h2>
+  <ul class="why">
+    <li><b>AgentCore, not Agents Classic</b> &mdash; Classic is in maintenance mode and our sandbox couldn't create Classic agents; AgentCore is the platform we're transitioning to. Concepts map 1:1.</li>
+    <li><b>Gateway + Lambda (MCP tool)</b> &mdash; the order tool is a real, auth-protected, reusable service. Gateway auto-handles OAuth (Cognito) and outbound IAM.</li>
+    <li><b>S3 Vectors, not OpenSearch Serverless</b> &mdash; no idle floor vs a ~$700/month baseline; ~10&ndash;100x cheaper for a low-traffic FAQ.</li>
+    <li><b>Claude Haiku 4.5</b> &mdash; tool-routing + short replies, so Haiku is cheaper/faster; Sonnet 4.5 is a one-line fallback.</li>
+    <li><b>PII = Mask, not Block</b> &mdash; masking strips the sensitive text but still answers; blocking would refuse any message containing an email.</li>
+  </ul>
+
+  <h2>Resources &amp; cost</h2>
+  <table>
+    <tr><th>Resource</th><th>Identifier</th></tr>
+    <tr><td>Order Lambda</td><td><code>csbot-get-order-status</code></td></tr>
+    <tr><td>Knowledge Base (S3 Vectors)</td><td><code>csbot-product-faq-kb</code></td></tr>
+    <tr><td>Guardrail</td><td><code>csbot-guardrail</code></td></tr>
+    <tr><td>AgentCore Gateway</td><td><code>csbot-gateway-qsf83slwcq</code> + <code>OrderTarget</code></td></tr>
+    <tr><td>Cognito user pool</td><td><code>us-east-1_zUkl0Gxco</code></td></tr>
+    <tr><td>S3 bucket (source doc)</td><td><code>csbot-faq-docs-ah</code></td></tr>
+  </table>
+  <p class="sub" style="margin-top:12px">All resources tagged <code>owner=hashim</code>, <code>environment=sandbox-ha</code>. <b>Cost:</b> S3 Vectors has no idle floor; model tokens (Haiku) are the largest line, still cents at demo volume; CloudShell is free. A few dollars total &mdash; tear resources down when finished.</p>
+
+  <footer>Built on Amazon Bedrock AgentCore &middot; Strands &middot; us-east-1 &nbsp;|&nbsp; Extended in Task 2 into a multi-agent supervisor (Order + Returns sub-agents).</footer>
+</div>
+</body>
+</html>

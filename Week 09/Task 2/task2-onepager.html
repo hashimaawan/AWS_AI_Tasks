@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuraBot Task 2 — Multi-Agent Supervisor & Swarm</title>
+<style>
+  :root{--bg:#f6f8fb;--panel:#ffffff;--panel2:#eef2f8;--ink:#1a2233;--muted:#5b6b8c;--line:#e2e8f2;--accent:#6a4bd6;--accent2:#0e8a5f;--pass:#0e8a5f;--warn:#b06a10;--mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 28px 80px;}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:30px;}
+  .kicker{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;}
+  h1{margin:8px 0 6px;font-size:29px;letter-spacing:-.01em;color:#0f1830;}
+  h2{font-size:20px;margin:42px 0 14px;padding:6px 0 8px;border-bottom:2px solid var(--accent);color:#0f1830;display:inline-block;}
+  h3.sec{font-size:15.5px;color:#3a2a7a;margin:22px 0 8px;}
+  .sub{color:var(--muted);font-size:15px;max-width:74ch;}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted);}
+  .pill b{color:var(--ink);font-weight:600;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+  .card h3{margin:0 0 6px;font-size:15px;color:#3a2a7a;}
+  .card p{margin:0;color:var(--muted);font-size:14px;}
+  figure{margin:14px 0 22px;}
+  img.shot{width:100%;border-radius:10px;border:1px solid var(--line);display:block;box-shadow:0 2px 8px rgba(20,30,60,.06);}
+  figcaption{color:var(--muted);font-size:12.5px;margin-top:7px;}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{color:var(--muted);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;background:var(--panel2);}
+  tr:last-child td{border-bottom:none;}
+  code{font-family:var(--mono);background:var(--panel2);padding:1px 6px;border-radius:5px;font-size:12px;color:#3a2a7a;}
+  .pass{color:var(--pass);font-weight:700;}
+  .decl{color:var(--warn);font-weight:700;}
+  ul.why{list-style:none;padding:0;margin:0;}
+  ul.why li{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:14px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+  ul.why li b{color:var(--accent2);}
+  .note{background:#fff6e6;border:1px solid #f2d79a;border-radius:8px;padding:11px 14px;font-size:13.5px;color:#7a5410;margin-top:12px;}
+  .good{background:#e9f8f1;border:1px solid #b6e6d0;border-radius:8px;padding:11px 14px;font-size:13.5px;color:#0b5e3f;margin-top:12px;}
+  .conv{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 16px 14px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+  .cust{margin:12px 0;}
+  .cust .who{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .cust .msg{font-size:14.5px;color:#0f1830;}
+  .bot{margin:12px 0;padding:10px 14px;background:var(--panel2);border-radius:8px;}
+  .bot .who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);}
+  .bot.d .who{color:var(--warn);}
+  .bot .msg{font-size:14.5px;color:#1a2233;}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">AI Engineering &middot; Task 2</div>
+    <h1>AuraBot &mdash; Multi-Agent Customer Support</h1>
+    <p class="sub">A supervisor routes each customer message to the right specialist &mdash; Order or Returns &mdash; and declines to guess when a request is ambiguous. Built two ways on Bedrock AgentCore: <b>Option A (agents-as-tools)</b> and <b>Option B (a true Strands Swarm)</b> where peer agents hand off to each other. Reuses the Task 1 Gateway, Knowledge Base, and Guardrail.</p>
+    <div class="pillrow">
+      <span class="pill"><b>Approaches:</b> agents-as-tools + swarm</span>
+      <span class="pill"><b>Agents:</b> supervisor/triage + 2 specialists</span>
+      <span class="pill"><b>Model:</b> Claude Haiku 4.5</span>
+      <span class="pill"><b>Routing:</b> 6/6</span>
+      <span class="pill"><b>Tracing:</b> OpenTelemetry</span>
+      <span class="pill"><b>Region:</b> us-east-1</span>
+    </div>
+  </header>
+
+  <h2>Two approaches, and why</h2>
+  <div class="grid">
+    <div class="card"><h3>Option A &mdash; Agents-as-tools</h3><p>A supervisor <b>calls</b> each specialist as a tool. Hierarchical, one-directional, deterministic, cheap. This is <i>orchestration / routing</i> &mdash; the right shape for the task as written.</p></div>
+    <div class="card"><h3>Option B &mdash; Swarm (true collaboration)</h3><p>Peer agents with <b>no central controller</b>. Each can <b>hand off</b> to another and they share working memory &mdash; including specialist&#8596;specialist. This is <i>true multi-agent collaboration</i>.</p></div>
+  </div>
+  <div class="good">Built A first as a working, debuggable baseline; then B to demonstrate genuine collaboration. Having both makes the trade-off explicit &mdash; and answers the question "is routing the same as collaboration?" (it isn't).</div>
+
+  <h2>Architecture &mdash; Option A (agents-as-tools)</h2>
+  <figure><img class="shot" src="images/t2-architecture-A.png" alt="Agents-as-tools architecture"><figcaption>Supervisor calls Order/Returns specialists as tools; each specialist owns one Gateway tool.</figcaption></figure>
+
+  <h2>Architecture &mdash; Option B (Strands Swarm)</h2>
+  <figure><img class="shot" src="images/t2-architecture.png" alt="Swarm architecture"><figcaption>Peer agents with autonomous, bidirectional handoffs and shared working memory &mdash; no supervisor.</figcaption></figure>
+
+  <h2>Collaboration in action (the showpiece)</h2>
+  <p class="sub">Question: <b>"Where is order 1002, and can I return it if I don't like it?"</b> &mdash; a two-part request answered by <b>three agents across two handoffs</b>, with the second handoff being the Order agent's <i>own</i> decision to pass to Returns.</p>
+  <figure><img class="shot" src="images/t2-collab-sequence.png" alt="Collaboration sequence diagram"><figcaption>Sequence: Triage &rarr; Order (get_order_status) &rarr; Order hands off &rarr; Returns (get_return_policy) &rarr; one combined answer.</figcaption></figure>
+  <div class="good"><b>Why this is collaboration:</b> the Triage&rarr;Order step is routing, but the Order&rarr;Returns handoff is the Order agent deciding, on its own, that the returns half belongs to a peer &mdash; reading the Returns agent's description to choose. No supervisor called anyone as a tool.</div>
+
+  <h2>Test results &mdash; per case, with real responses</h2>
+  <p class="sub">"6/6 pass" alone doesn't show the picture, so here is what actually happened for each query: the routing decision, the tool used, and the bot's real answer.</p>
+  <table>
+    <tr><th>Customer message</th><th>Routing</th><th>Actual bot response (verbatim)</th><th></th></tr>
+    <tr><td>Where's order 1001?</td><td>&rarr; Order</td><td>Order 1001 is on its way! Shipped &middot; FedEx &middot; Wireless Headphones x1 &middot; ETA September 5, 2026.</td><td class="pass">PASS</td></tr>
+    <tr><td>What's the status of order 1003?</td><td>&rarr; Order</td><td>Order 1003 has been delivered &mdash; 2 USB-C cables, via UPS, on August 28, 2026.</td><td class="pass">PASS</td></tr>
+    <tr><td>Can I return order 1001?</td><td>&rarr; Returns</td><td>Order 1001 is eligible for return &mdash; delivered 2 days ago (within the 30-day window) and unopened; full refund once received.</td><td class="pass">PASS</td></tr>
+    <tr><td>I want a refund for order 1003</td><td>&rarr; Returns</td><td>Order 1003 is not eligible &mdash; delivered 40 days ago, past the 30-day window.</td><td class="pass">PASS</td></tr>
+    <tr><td>Can I return order 1002?</td><td>&rarr; Returns</td><td>Order 1002 is still processing and hasn't shipped, so there's nothing to return &mdash; but you can cancel before it ships for a full refund.</td><td class="pass">PASS</td></tr>
+    <tr><td>Something's wrong with my earbuds</td><td>declined</td><td>I'm not sure whether this is an order or a returns question. Could you tell me a bit more about what you need help with?</td><td class="decl">DECLINE</td></tr>
+    <tr><td>Should I get a refund for my Tesla stock?</td><td>declined</td><td>I'm not sure whether this is an order or a returns question&hellip; (I support AuraBuds Pro orders and returns).</td><td class="decl">DECLINE</td></tr>
+  </table>
+  <div class="note"><b>Honest tuning note:</b> "What's your return policy?" (no order ID) also <b>declined</b> and asked to clarify, when ideally it should route to Returns. The supervisor's "decline if unsure" rule is slightly over-cautious on general policy questions. It's safe behavior (it never guesses), and a one-line prompt tweak &mdash; "a general return-policy question IS a returns question" &mdash; would fix it. Also note: the Tesla question was caught by the supervisor's decline rule <i>before</i> reaching a specialist, so the guardrail's financial-advice topic never had to fire.</div>
+
+  <h2>Sample conversation</h2>
+  <div class="conv">
+    <div class="cust"><div class="who">Customer</div><div class="msg">Can I return order 1001?</div></div>
+    <div class="bot"><div class="who">AuraBot &middot; routed to Returns</div><div class="msg">Great news! Order 1001 is eligible for return. It was delivered 2 days ago (within our 30-day return window) and is unopened, so you'll receive a full refund to your original payment method once we receive it.</div></div>
+
+    <div class="cust"><div class="who">Customer</div><div class="msg">Can I return order 1002?</div></div>
+    <div class="bot"><div class="who">AuraBot &middot; routed to Returns</div><div class="msg">Your order 1002 is still processing and hasn't shipped yet, so there's nothing to return at this time. However, if you'd like to cancel the order before it ships, we can do that for a full refund. Would you like to proceed with a cancellation?</div></div>
+
+    <div class="cust"><div class="who">Customer</div><div class="msg">I want a refund for order 1003</div></div>
+    <div class="bot"><div class="who">AuraBot &middot; routed to Returns</div><div class="msg">Unfortunately, order 1003 is not eligible for return. It was delivered 40 days ago, which is past our 30-day return window.</div></div>
+
+    <div class="cust"><div class="who">Customer</div><div class="msg">Should I get a refund for my Tesla stock?</div></div>
+    <div class="bot d"><div class="who">AuraBot &middot; declined (out of scope)</div><div class="msg">I'm not sure whether this is an order or a returns question. Could you tell me a bit more about what you need help with? (I support customers with AuraBuds Pro orders and returns.)</div></div>
+  </div>
+
+  <h2>Routing scorecard</h2>
+  <figure><img class="shot" src="images/t2-routing.png" alt="Routing scorecard 6/6"><figcaption>Automated routing eval &mdash; <code>run_routing_evals.py</code>. Ambiguous cases "pass" when the bot declines rather than guesses.</figcaption></figure>
+  <figure><img class="shot" src="images/t2-chat.png" alt="Live supervisor chat"><figcaption>Live supervisor session &mdash; clear cases route, ambiguous case asks to clarify.</figcaption></figure>
+  <figure><img class="shot" src="images/t2-collab.png" alt="Swarm collaboration run"><figcaption>Swarm run &mdash; the 1002 double-handoff (order specialist hands off to returns).</figcaption></figure>
+
+  <h2>Observability &mdash; execution trace</h2>
+  <p class="sub">Instrumented with OpenTelemetry. Each message produces a trace tree: supervisor/triage &rarr; specialist &rarr; Gateway/Lambda tool &rarr; model calls, with timing and token counts.</p>
+  <figure><img class="shot" src="images/t2-trace.png" alt="Trace waterfall"><figcaption>Trace waterfall &mdash; the same span data CloudWatch Transaction Search would render.</figcaption></figure>
+  <div class="note"><b>Honest environment finding:</b> the managed CloudWatch GenAI dashboard needs <b>Transaction Search</b>, which internally issues an <i>untagged</i> <code>logs:CreateLogGroup</code> on the reserved <code>/aws/spans</code> group. The org SCP hard-denies that call, and it can't be tagged because the service (not the user) makes it &mdash; confirmed by testing. Captured the equivalent traces via local OTEL export. In an unrestricted account, or with Transaction Search enabled once by an admin, the same spans flow to the dashboard with zero code change.</div>
+
+  <h2>Option A vs Option B &mdash; the trade-off</h2>
+  <table>
+    <tr><th>Dimension</th><th>A: Agents-as-tools</th><th>B: Swarm</th></tr>
+    <tr><td>Control flow</td><td>Supervisor calls specialists (one-way)</td><td>Peers hand off to each other (bidirectional)</td></tr>
+    <tr><td>Is it "collaboration"?</td><td>No &mdash; orchestration / routing</td><td>Yes &mdash; true collaboration</td></tr>
+    <tr><td>Multi-part questions</td><td>Routes to one specialist</td><td>One specialist can hand off to finish the other half</td></tr>
+    <tr><td>Cost / tokens</td><td>Lower (deterministic)</td><td>Higher (agents reason about handoffs)</td></tr>
+    <tr><td>Debuggability</td><td>Simplest (one process, one trace)</td><td>More moving parts; needs handoff bounds</td></tr>
+    <tr><td>Best for</td><td>The routing task as written</td><td>Demonstrating genuine multi-agent collaboration</td></tr>
+  </table>
+
+  <h2>Key design decisions</h2>
+  <ul class="why">
+    <li><b>Each sub-agent gets only its own tool</b> &mdash; the Gateway hosts all tools, but code filters them by name so the Order agent can't answer returns (and vice-versa). Keeps routing meaningful.</li>
+    <li><b>Decline rather than guess</b> &mdash; both approaches ask for clarification when unsure instead of routing blindly. (Slightly over-cautious on general policy questions &mdash; see tuning note.)</li>
+    <li><b>Fresh context per query (Option A)</b> &mdash; each agent's history resets before every call; fixed a bug where "my earbuds" pulled an order ID from an earlier turn.</li>
+    <li><b>Handoff bounds (Option B)</b> &mdash; <code>max_handoffs</code> + repetitive-handoff detection stop agents ping-ponging.</li>
+    <li><b>Required vs. optional params</b> &mdash; <code>order_id</code> is required on the order tool but optional on the returns tool ("what's your return policy?" needs no order).</li>
+    <li><b>Claude Haiku 4.5</b> &mdash; routing is classification + short replies; Haiku is cheaper/faster, Sonnet a one-line fallback.</li>
+  </ul>
+
+ 
+  <h2>Cost &amp; teardown</h2>
+  <p class="sub">All new resources tagged <code>owner=hashim</code>, <code>environment=sandbox-ha</code>. Model tokens (Haiku) dominate. A routed message runs two model passes (supervisor + specialist); the swarm runs more (each handoff reasons), so Option B costs more &mdash; the trade-off for collaboration. Tear all resources down when finished.</p>
+
+  <footer>Built on Amazon Bedrock AgentCore &middot; Strands &middot; agents-as-tools + swarm &middot; us-east-1 &nbsp;|&nbsp; Next: tune the decline threshold; enable CloudWatch Transaction Search via admin for the managed dashboard.</footer>
+</div>
+</body>
+</html>

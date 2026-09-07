@@ -14,7 +14,6 @@ _client = boto3.client(
     config=Config(read_timeout=120, retries={"max_attempts": 2}),
 )
 
-# The exact blocked-message text you set in the console. If the answer equals
 # this, the GUARDRAIL blocked it (vs. the model choosing to decline on its own).
 BLOCKED_MSG = "I cannot answer this based on the provided documents."
 

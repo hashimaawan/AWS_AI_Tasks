@@ -49,6 +49,10 @@ def retrieve(kb_id, question):
         uri = r.get("location", {}).get("s3Location", {}).get("uri", "")
         chunks.append({"doc": uri.split("/")[-1], "score": r.get("score"),
                        "text": r.get("content", {}).get("text", "")[:200]})
+
+#         # in score_kb, when you find the correct chunk:
+# matched_score = next((c["score"] for c in chunks if p["expect_doc"] in c["doc"]), None)
+# rows.append({..., "rank": rank, "match_score": matched_score, "top_docs": docs_returned})
     return chunks
 
 

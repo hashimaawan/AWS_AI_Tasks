@@ -1,0 +1,29 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>AuraBot — Trace Waterfall</title><style>
+  body{background:#0f1420;color:#e8edf6;font-family:-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:28px 30px 50px;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{color:#9aa7bd;font-size:13px;margin-bottom:20px;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-size:12px;color:#9aa7bd;}
+  .legend span b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle;}
+  .row{display:flex;align-items:center;height:30px;border-bottom:1px solid #1c2434;}
+  .lbl{width:320px;font-size:12.5px;color:#dfe7f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+  .meta{color:#7c8aa3;font-size:11px;margin-left:8px;}
+  .track{position:relative;flex:1;height:20px;background:#141b29;border-radius:4px;overflow:hidden;}
+  .bar{position:absolute;top:3px;height:14px;border-radius:3px;min-width:2px;opacity:.9;}
+  .ms{position:absolute;right:4px;top:-1px;font-size:10px;color:#0f1420;font-weight:700;}
+  .axis{color:#7c8aa3;font-size:11px;text-align:right;margin-top:6px;}
+</style></head><body>
+  <h1>AuraBot — Multi-Agent Trace (local OpenTelemetry)</h1>
+  <div class="sub">One customer message routed by the supervisor. Total wall time: 8560 ms · same span data CloudWatch Transaction Search would render.</div>
+  <div class="legend">
+    <span><b style="background:#7c5cff"></b>Supervisor</span>
+    <span><b style="background:#2f9e6f"></b>Sub-agent</span>
+    <span><b style="background:#e8871e"></b>Routing decision</span>
+    <span><b style="background:#d64b5d"></b>Tool (Gateway&#8594;Lambda)</span>
+    <span><b style="background:#1fa9c8"></b>Model call</span>
+    <span><b style="background:#5a6a82"></b>Internal</span>
+  </div>
+  <div class="row"><div class="lbl" style="padding-left:14px"><span class="dot" style="background:#7c5cff"></span>SUPERVISOR<span class="meta">agent · 2100 tok</span></div><div class="track"><div class="bar" style="left:0.00%;width:100.00%;background:#7c5cff"><span class="ms">8560 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:36px"><span class="dot" style="background:#5a6a82"></span>loop cycle<span class="meta"></span></div><div class="track"><div class="bar" style="left:0.00%;width:83.86%;background:#5a6a82"><span class="ms">7179 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:58px"><span class="dot" style="background:#1fa9c8"></span>model call (Haiku)<span class="meta">975 tok</span></div><div class="track"><div class="bar" style="left:0.01%;width:47.23%;background:#1fa9c8"><span class="ms">4043 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:58px"><span class="dot" style="background:#e8871e"></span>route → Returns<span class="meta">routing decision</span></div><div class="track"><div class="bar" style="left:47.25%;width:36.62%;background:#e8871e"><span class="ms">3134 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:80px"><span class="dot" style="background:#2f9e6f"></span>Returns sub-agent<span class="meta">agent · 1622 tok</span></div><div class="track"><div class="bar" style="left:47.26%;width:36.60%;background:#2f9e6f"><span class="ms">3132 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:102px"><span class="dot" style="background:#5a6a82"></span>loop cycle<span class="meta"></span></div><div class="track"><div class="bar" style="left:47.26%;width:18.52%;background:#5a6a82"><span class="ms">1585 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:124px"><span class="dot" style="background:#1fa9c8"></span>model call (Haiku)<span class="meta">733 tok</span></div><div class="track"><div class="bar" style="left:47.26%;width:13.31%;background:#1fa9c8"><span class="ms">1139 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:124px"><span class="dot" style="background:#d64b5d"></span>tool: ReturnsTarget___get_return_policy<span class="meta">Gateway → Lambda</span></div><div class="track"><div class="bar" style="left:60.57%;width:5.20%;background:#d64b5d"><span class="ms">445 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:102px"><span class="dot" style="background:#5a6a82"></span>loop cycle<span class="meta"></span></div><div class="track"><div class="bar" style="left:65.78%;width:18.07%;background:#5a6a82"><span class="ms">1546 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:124px"><span class="dot" style="background:#1fa9c8"></span>model call (Haiku)<span class="meta">889 tok</span></div><div class="track"><div class="bar" style="left:65.78%;width:18.06%;background:#1fa9c8"><span class="ms">1546 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:36px"><span class="dot" style="background:#5a6a82"></span>loop cycle<span class="meta"></span></div><div class="track"><div class="bar" style="left:83.87%;width:16.13%;background:#5a6a82"><span class="ms">1380 ms</span></div></div></div><div class="row"><div class="lbl" style="padding-left:58px"><span class="dot" style="background:#1fa9c8"></span>model call (Haiku)<span class="meta">1125 tok</span></div><div class="track"><div class="bar" style="left:83.87%;width:16.12%;background:#1fa9c8"><span class="ms">1380 ms</span></div></div></div>
+  <div class="axis">0 ms &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212; 8560 ms</div>
+</body></html>
